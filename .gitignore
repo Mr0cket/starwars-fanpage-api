@@ -1,0 +1,6 @@
+# local files
+/node_modules
+.DS_Store
+
+# assignment specific files
+/briefing
