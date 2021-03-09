@@ -19,12 +19,11 @@ const charCache = new Cache(0);
   */
 
 router.get("/", async (req, res, next) => {
-  const { page = 0, title, gender = 0 } = req.query;
-  // enumerate gender (0 = none, 1 = female, 2 = male)
+  const { page = 0, title, gender } = req.query;
 
   //Validation
-  if (isNaN(Number(gender) || Number(gender) > 2 || Number(gender) < 0))
-    return res.status(400).json({ message: "invalid gender format." });
+  if (gender && (gender !== "male" || gender !== "female"))
+    return res.status(400).json({ message: "invalid gender" });
   if (!title) return res.status(400).json({ message: "missing title queryString" });
   if (isNaN(Number(page)) || Number(page) < 0)
     return res.status(400).json({ message: "invalid page querystring. require number > 0" });
@@ -43,16 +42,26 @@ router.get("/", async (req, res, next) => {
     results.forEach((movie) => (combinedCharacters = combinedCharacters.concat(movie.characters)));
 
     // remove duplacate characters from the character list
-    // retrieve all people from api (w/ 9 requests) [& cache temporarily in DB]
-    // use a cache to store the values of the requests.
-    let uniqueCharactersUrls = Array.from(new Set(combinedCharacters));
-    const uniqueCharactersList = uniqueCharactersUrls.map((urlString) => {
-      const charId = urlString.match(/[0-9]/);
-      return charCache.get(charId, fetchCharacter);
-    });
-    axios.get();
+    const uniqueCharactersUrls = Array.from(new Set(combinedCharacters));
+    // retrieve all people from api (w/ 9 requests via pagination & cache results)
+    // OR retrieve characters individually as required (& cache the results)
+
+    // create a list of promises and resolve them.
+    let uniqueCharactersList = await Promise.all(
+      uniqueCharactersUrls.map((urlString) => {
+        // get the character Ids from the url string
+        const characterId = urlString.match(/[0-9]/)[0];
+
+        // use the cache to check if the value is stored otherwise, make a request
+        return charCache.get(characterId, fetchCharacter);
+      })
+    );
+
     // check & filter by gender
-    if (gender) uniqueCharactersList.filter();
+    if (gender)
+      uniqueCharactersList = uniqueCharactersList.filter(
+        (character) => character.gender === gender
+      );
 
     // paginate the results
     const count = uniqueCharactersList.length;

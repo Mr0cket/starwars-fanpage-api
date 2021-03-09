@@ -1,1 +1,1 @@
-GET http://localhost:4000/characters?title=jedi&page=1
+GET http://localhost:4000/characters?title=jedi&page=0
