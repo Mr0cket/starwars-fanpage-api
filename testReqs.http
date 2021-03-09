@@ -1,1 +1,6 @@
-GET http://localhost:4000/characters?title=jedi&page=0
+### get paginated results
+GET http://localhost:4000/characters?title=jedi
+### sort by height (desc)
+GET http://localhost:4000/characters?title=hope&page=0&sortby=height
+### sort by height (asc)
+GET http://localhost:4000/characters?title=jedi&page=0&sortby=height&order=ascending
