@@ -3,6 +3,7 @@ const { apiUrl } = require("../config/constants");
 const router = require("express").Router();
 const Cache = require("../lib/cache");
 const fetchCharacter = require("../lib/fetchCharacter");
+const { sortByAge, sortByHeight } = require("../lib/sortBy");
 const charCache = new Cache(0);
 // assume api should return all characters from all movies that match the search term used. ()
 // assume if multiple movies match a search term, characters from all movies should be combined (duplicates removed).
@@ -19,7 +20,7 @@ const charCache = new Cache(0);
   */
 
 router.get("/", async (req, res, next) => {
-  const { page = 0, title, gender } = req.query;
+  const { page = 0, title, gender, sortby, order = "descending" } = req.query;
 
   //Validation
   if (gender && (gender !== "male" || gender !== "female"))
@@ -50,9 +51,9 @@ router.get("/", async (req, res, next) => {
     let uniqueCharactersList = await Promise.all(
       uniqueCharactersUrls.map((urlString) => {
         // get the character Ids from the url string
-        const characterId = urlString.match(/[0-9]/)[0];
+        const characterId = urlString.match(/[0-9]+/)[0];
 
-        // use the cache to check if the value is stored otherwise, make a request
+        // use the cache to check if value is already stored otherwise, make a request
         return charCache.get(characterId, fetchCharacter);
       })
     );
@@ -63,6 +64,14 @@ router.get("/", async (req, res, next) => {
         (character) => character.gender === gender
       );
 
+    // check for a sort term
+    if (sortby) {
+      if (sortby === "age") {
+        uniqueCharactersList = uniqueCharactersList.sort(sortByAge(order));
+      } else if (sortby === "height") {
+        uniqueCharactersList = uniqueCharactersList.sort(sortByHeight(order));
+      }
+    }
     // paginate the results
     const count = uniqueCharactersList.length;
     const startingIndex = Number(page) * 30;
@@ -73,12 +82,10 @@ router.get("/", async (req, res, next) => {
     );
 
     // send the results back
-    res.json({ page, matchedMovies, characters: paginatedResults, count });
+    res.json({ page, count, matchedMovies, characters: paginatedResults });
   } catch (e) {
     console.log(e.message);
     next(e);
   }
-
-  res.send();
 });
 module.exports = router;

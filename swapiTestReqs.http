@@ -5,3 +5,5 @@ GET https://swapi.dev/api/films/?search=asdfasfgafsdg
 GET https://swapi.dev/api/films/schema
 ###
 GET https://swapi.dev/api/people?page=2
+### schema
+GET https://swapi.dev/api/people/schema
