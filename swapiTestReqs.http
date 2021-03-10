@@ -1,4 +1,4 @@
-GET https://swapi.dev/api/films/1
+GET https://swapi.dev/api/films
 ###
 GET https://swapi.dev/api/films/?search=asdfasfgafsdg
 ###
@@ -6,4 +6,7 @@ GET https://swapi.dev/api/films/schema
 ###
 GET https://swapi.dev/api/people?page=2
 ### schema
-GET https://swapi.dev/api/people/schema
+GET https://swapi.dev/api/people
+### planets
+GET https://swapi.dev/api/planets
+

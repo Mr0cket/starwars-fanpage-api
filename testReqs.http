@@ -1,6 +1,12 @@
-### get paginated results
+### /characters paginated results
 GET http://localhost:4000/characters?title=jedi
+### /characters sort by age (desc)
+GET http://localhost:4000/characters?title=hope&sortby=age
 ### sort by height (desc)
 GET http://localhost:4000/characters?title=hope&page=0&sortby=height
 ### sort by height (asc)
 GET http://localhost:4000/characters?title=jedi&page=0&sortby=height&order=ascending
+### planets with a certain climate (& with dark-haired people)
+GET http://localhost:4000/planets/climate/abcd
+### get stats on health of the cache
+GET http://localhost:4000/cachestats
