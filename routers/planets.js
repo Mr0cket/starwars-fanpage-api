@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-const { apiUrl } = require("../config/constants");
 const router = require("express").Router();
 const Cache = require("../lib/cache");
 const fetchAll = require("../lib/fetchAllPages");
