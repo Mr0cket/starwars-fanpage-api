@@ -13,14 +13,14 @@ const { sortByAge, sortByHeight } = require("../lib/sortBy");
       page: number
       count: number
       matchedMovies: title[] // use this & character.films to re-match characters to films in FE
-      characters: character[] limit 30 results
+      characters: character[] // limit 30 results
     }
 */
 
 router.get("/", async (req, res, next) => {
   const { page = 0, title, gender, sortby, order = "descending" } = req.query;
 
-  //Validation
+  // Validation
   if (gender && (gender !== "male" || gender !== "female"))
     return res.status(400).json({ message: "invalid gender" });
   if (!title) return res.status(400).json({ message: "missing title queryString" });
@@ -55,9 +55,9 @@ router.get("/", async (req, res, next) => {
     // check for a sort term
     if (sortby) {
       if (sortby === "age") {
-        uniqueCharactersList = uniqueCharactersList.sort(sortByAge(order));
+        uniqueCharactersList.sort(sortByAge(order));
       } else if (sortby === "height") {
-        uniqueCharactersList = uniqueCharactersList.sort(sortByHeight(order));
+        uniqueCharactersList.sort(sortByHeight(order));
       }
     }
 
