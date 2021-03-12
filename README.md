@@ -41,7 +41,7 @@ Server will start locally on port `:4000`
 
 ### parameters
 
-- `climateType` - required `['arid','tropical', 'temperate', 'windy', 'murky', 'frozen', 'hot']`
+- `climateType` - required `['arid','tropical', 'temperate', 'windy', 'murky', "polluted", "moist", "hot", "unknown" ...???]`
 
 ### Query String
 
