@@ -19,9 +19,9 @@ const { sortByAge, sortByHeight } = require("../lib/sortBy");
 
 router.get("/", async (req, res, next) => {
   const { page = 0, title, gender, sortby, order = "descending" } = req.query;
-
+  console.log(gender && (gender !== "male" || gender !== "female"));
   // Validation
-  if (gender && (gender !== "male" || gender !== "female"))
+  if (gender && gender !== "male" && gender !== "female")
     return res.status(400).json({ message: "invalid gender" });
   if (!title) return res.status(400).json({ message: "missing title queryString" });
   if (isNaN(Number(page)) || Number(page) < 0)
